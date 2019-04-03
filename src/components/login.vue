@@ -46,6 +46,7 @@ export default {
   },
   methods: {
     login(){
+      //console.log(this.access);
       this.$store.dispatch('api_login', this.access)
         .then(response => {
           this.$router.push({name: 'profile'})

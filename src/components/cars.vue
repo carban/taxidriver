@@ -89,7 +89,7 @@ export default {
   },
   beforeCreate(){
 
-    //this.$store.dispatch('favoritesInfo');
+    this.$store.dispatch('carsInfo');
 
   },
   methods: {

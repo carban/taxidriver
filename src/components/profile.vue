@@ -30,19 +30,22 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text">+57</div>
                   </div>
-                  <input type="number" v-model="user.phone" class="form-control" id="inlineFormInputGroupUsername" placeholder="Phone" disabled>
+                  <input type="number" v-model="user.telefonoconductor" class="form-control" id="inlineFormInputGroupUsername" placeholder="Phone" disabled>
                 </div>
                 <div class="form-group">
-                  <input type="text" v-model="user.first_name" class="form-control" placeholder="First Name">
+                  <input type="text" v-model="user.nombreconductor" class="form-control" placeholder="First Name">
                 </div>
                 <div class="form-group">
-                  <input type="text" v-model="user.last_name" class="form-control" placeholder="Last Name">
+                  <input type="text" v-model="user.apellidoconductor" class="form-control" placeholder="Last Name">
                 </div>
                 <div class="form-group">
-                  <input type="text" v-model="user.email" class="form-control" placeholder="Email">
+                  <input type="text" v-model="user.direccionconductor" class="form-control" placeholder="Direction">
                 </div>
                 <div class="form-group">
-                  <input type="text" v-model="user.credit_card" class="form-control" placeholder="Credit-card Number">
+                  <input type="text" v-model="user.emailconductor" class="form-control" placeholder="Email">
+                </div>
+                <div class="form-group">
+                  <input type="text" v-model="user.tarjetaconductor" class="form-control" placeholder="Credit-card Number">
                 </div>
                 <div class="form-group">
                   <button class="btn btn-outline-success btn-block">Update</button>
@@ -123,10 +126,11 @@ export default {
   methods: {
     updateProfileInfo(){
       var newProfile = {
-        first_name: this.user.first_name,
-        last_name: this.user.last_name,
-        email: this.user.email,
-        credit_card: this.user.credit_card
+        first_name: this.user.nombreconductor,
+        last_name: this.user.apellidoconductor,
+        direction: this.user.direccionconductor,
+        email: this.user.emailconductor,
+        credit_card: this.user.tarjetaconductor
       }
       this.$store.dispatch('updateProfileInfo', newProfile)
         .then(res => {

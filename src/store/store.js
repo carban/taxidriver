@@ -118,7 +118,7 @@ export const store = new Vuex.Store({
   actions: {
     api_register: (context, credentials) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8000/api/signup', credentials)
+        axios.post('http://localhost:8000/api/driver/signup', credentials)
           .then(res => {
             console.log(res.data);
             resolve(res);
@@ -131,7 +131,7 @@ export const store = new Vuex.Store({
     },
     api_login: (context, credentials) => {
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:8000/api/driver/loginDriver',
+        axios.post('http://localhost:8000/api/driver/login',
         {phone: credentials.phone, password: credentials.password})
           .then(res => {
             console.log(res.data);
@@ -174,7 +174,7 @@ export const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         const decoded = jwtDecode(context.getters.token);
         const object = {newProfile: newProfile, phone: decoded.phone}
-        axios.post('http://localhost:8000/api/update-profile', object)
+        axios.post('http://localhost:8000/api/driver/update-profile', object)
           .then(res => {
             resolve(res);
           })
@@ -187,18 +187,21 @@ export const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log('cars consulted');
         const decoded = jwtDecode(context.getters.token);
-        axios.post('http://localhost:8000/api/profile/cars', decoded)
+        axios.post('http://localhost:8000/api/driver/cars', decoded)
           .then(res => {
             var data = res.data;
-            var array = []
+            var array = [];
             for(var i in data){
-              var fid = data[i].favid;
-              var lat = data[i].geom.coordinates[0];
-              var lng = data[i].geom.coordinates[1];
-              var t = data[i].title;
-              array.push({id: fid, title: t, coor: [lat, lng]});
+              var plate = data[i].placa;
+              var brand = data[i].marca;
+              var model = data[i].modelo;
+              var asoat = data[i].soat;
+              var aanho = data[i].anho;
+              array.push({placa: plate, marca: brand, modelo: model, soat: asoat, anho: aanho});
             }
             context.commit('setcars', array);
+
+            //context.commit('setcars', array);
             resolve(res);
           })
           .catch(err => {
@@ -206,13 +209,13 @@ export const store = new Vuex.Store({
           })
       });
     },
-    sendNewFavorite: (context, item) => {
+    sendNewCar: (context, item) => {
       return new Promise((resolve, reject) => {
         //console.log(context.getters.token);
         const decoded = jwtDecode(context.getters.token);
         // const phoneNumber = context.getters.profile.phone;
         const obj = {f_item: item, phone: decoded.phone};
-        axios.post('http://localhost:8000/api/profile/new-favorite', obj)
+        axios.post('http://localhost:8000/api/driver/new-car', obj)
           .then(res => {
             console.log(res.data);
             resolve(res);
@@ -222,7 +225,7 @@ export const store = new Vuex.Store({
           })
       });
     },
-    deleteFavorite: (context, favID) => {
+    deleteCar: (context, favID) => {
       return new Promise((resolve, reject) => {
         //console.log(context.getters.token);
         const decoded = jwtDecode(context.getters.token);
@@ -237,7 +240,7 @@ export const store = new Vuex.Store({
           })
       });
     },
-    updateFavorite: (context, obj) => {
+    updateCar: (context, obj) => {
       return new Promise((resolve, reject) => {
         //console.log(context.getters.token);
         const decoded = jwtDecode(context.getters.token);

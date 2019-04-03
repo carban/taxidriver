@@ -28,6 +28,9 @@
                   <input type="text" v-model="user.credit_card" class="form-control" placeholder="Credit Card">
                 </div>
                 <div class="form-group">
+                  <input type="text" v-model="user.direction" class="form-control" placeholder="Direction">
+                </div>
+                <div class="form-group">
                   <input type="password" v-model="user.password" class="form-control" placeholder="Password">
                 </div>
                 <div class="form-group">
@@ -56,6 +59,7 @@ export default {
         phone: null,
         email: null,
         credit_card: null,
+        direction: null,
         password: null,
         passConf: null
       },
