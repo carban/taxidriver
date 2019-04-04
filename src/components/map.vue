@@ -7,17 +7,17 @@
         </div>
         <calltaxi id="calltaxi"></calltaxi>
       </div>
-      <h1 id="hide">{{firstTimeForAInterval}}</h1>
+      <!-- <h1 id="hide">{{firstTimeForAInterval}}</h1> -->
       <l-map id="myMap" ref="myMap" :min-zoom="minzoom" :max-zoom="maxzoom" :zoom="zoom" :center="center" v-on:click="print" class="row-lg-12">
         <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
         <!-- <l-marker :lat-lng="marker" :icon="icon"></l-marker> -->
         <!-- <l-marker v-for="(mark, err) in myMarkers" :key="err" :lat-lng="mark.coor"></l-marker> -->
         <!--ORIGIN COOR  -->
-        <l-marker :icon="iconOrigin" :lat-lng="originCoor">
-        </l-marker>
+        <!-- <l-marker :icon="iconOrigin" :lat-lng="originCoor"> -->
+        <!-- </l-marker> -->
         <!-- DESTINY COOR -->
-        <l-marker :icon="iconDestiny" :lat-lng="destinyCoor">
-        </l-marker>
+        <!-- <l-marker :icon="iconDestiny" :lat-lng="destinyCoor"> -->
+        <!-- </l-marker> -->
         <!-- MENU COOR -->
         <l-marker :icon="iconMenu" v-if="!summary_bool" :lat-lng="menuCoor">
           <l-popup>
@@ -78,16 +78,6 @@ export default {
         latlngs: [this.originCoor, this.destinyCoor],
         color: 'blue'
       }
-    },
-    firstTimeForAInterval(){
-      var res = this.$store.getters.firstTimeForAInterval;
-      if (!res) {
-        // console.log(this.machineControl._routes[0].summary);
-        this.$store.commit('destinyAndTime', [Math.ceil(this.machineControl._routes[0].summary.totalDistance/100)/10, Math.ceil(this.machineControl._routes[0].summary.totalTime/60)]);
-        // console.log(this.machineControl._routes[0]);
-        // this.$store.commit('firstTimeForAInterval');
-      }
-      return res;
     }
   },
   data () {
@@ -152,27 +142,27 @@ export default {
     // alert("Choose car");
   },
   mounted() {
-    this.$nextTick(() => {
-      var mapp = this.$refs.myMap.mapObject // work as expected
-
-     this.machineControl = L.Routing.control({
-       // waypoints: [
-       //   [3.42882159671311, -76.54704415637336],
-       //   [3.4329340857995096, -76.48538692422893]
-       // ],
-       // router: new L.Routing.OSRMv1({
-       //     serviceUrl: "http://download.geofabrik.de/south-america/colombia-latest.osm.pbf"
-       // }),
-       lineOptions: {
-         styles: [{color: 'blue', opacity: .7, weight: 4}],
-         missingRouteStyles: [{color: 'lime', opacity: 0.25, weight: 7}]
-       }
-     }).addTo(mapp)
-    });
+    // this.$nextTick(() => {
+    //   var mapp = this.$refs.myMap.mapObject // work as expected
+    //
+    //  this.machineControl = L.Routing.control({
+    //    // waypoints: [
+    //    //   [3.42882159671311, -76.54704415637336],
+    //    //   [3.4329340857995096, -76.48538692422893]
+    //    // ],
+    //    // router: new L.Routing.OSRMv1({
+    //    //     serviceUrl: "http://download.geofabrik.de/south-america/colombia-latest.osm.pbf"
+    //    // }),
+    //    lineOptions: {
+    //      styles: [{color: 'blue', opacity: .7, weight: 4}],
+    //      missingRouteStyles: [{color: 'lime', opacity: 0.25, weight: 7}]
+    //    }
+    //  }).addTo(mapp)
+    // });
   },
   updated(){
-      this.machineControl.spliceWaypoints(0, 1, this.originCoor);
-      this.machineControl.spliceWaypoints(1, 1, this.destinyCoor);
+      // this.machineControl.spliceWaypoints(0, 1, this.originCoor);
+      // this.machineControl.spliceWaypoints(1, 1, this.destinyCoor);
   }
 }
 </script>

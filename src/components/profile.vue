@@ -67,11 +67,10 @@
                 </div>
               </b-modal>
 
-              <b-modal id="chooseTaxi" title="Select the car to work" @ok="letsgo()">
-                <select  name="phone" value="" class="form-control" placeholder="Password">
-                  <option value="0">Select a Car</option>
-                  <option v-for="(item, index) in getCars" :key="index">{{item.placa}}</option>
-                </select>
+              <b-modal id="chooseTaxi" title="Select the car to work" @ok="">
+                <div v-on:click="letsgo(item.placa)" class="alert alert-info" v-for="(item, index) in getCars" :key="index">
+                  {{item.placa}}
+                </div>
               </b-modal>
                 </div>
               </div>
@@ -121,6 +120,7 @@ export default {
   beforeCreate(){
     //Consult Profile Info
     this.$store.dispatch('profileInfo')
+    this.$store.dispatch('carsInfo')
 
   },
   methods: {
@@ -142,8 +142,9 @@ export default {
             })
         })
     },
-    letsgo(){
-      this.$store.commit('setCarChosen');
+    letsgo(placa){
+      this.$store.commit('setCarChosenTrue');
+      this.$store.commit('setActualCar', placa);
       this.$router.push({name: 'map'})
     }
   },

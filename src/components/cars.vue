@@ -27,7 +27,7 @@
                   <td>{{item.soat}}</td>
                   <td>{{item.anho}}</td>
                   <td><b-button v-on:click="setEditingCar(item.marca, item.modelo, item.soat, item.anho)" v-b-modal.myEditModal variant="info"><img src="@/assets/edit3.png"></b-button></td>
-                  <td><b-button variant="danger"><span aria-hidden="true">&times;</span></b-button></td>
+                  <td><b-button v-if="item.placa!=getActualCar" v-on:click="deleteCar(item.placa)" variant="danger"><span aria-hidden="true">&times;</span></b-button></td>
                 </tr>
               </tbody>
             </table>
@@ -52,18 +52,18 @@
           </form>
         </b-modal>
 
-        <b-modal id="myCreateCarModal" ref="myEditModal" title="Edit Car" @ok="">
+        <b-modal id="myCreateCarModal" ref="myCreateModal" title="Edit Car" @ok="createNewCar()">
           <form @submit.stop.prevent="">
             <b>Plate</b>
-            <b-form-input type="text" placeholder="brand" v-model="editingCar.brand" autofocus></b-form-input>
+            <b-form-input type="text" placeholder="Plate" v-model="creatingCar.plate" autofocus></b-form-input>
             <b>brand</b>
-            <b-form-input type="text" placeholder="brand" v-model="editingCar.brand" autofocus></b-form-input>
+            <b-form-input type="text" placeholder="brand" v-model="creatingCar.brand" autofocus></b-form-input>
             <b>model</b>
-            <b-form-input type="text" placeholder="Model" v-model="editingCar.model" autofocus></b-form-input>
+            <b-form-input type="text" placeholder="Model" v-model="creatingCar.model" autofocus></b-form-input>
             <b>soat</b>
-            <b-form-input type="text" placeholder="soat" v-model="editingCar.soat" autofocus></b-form-input>
+            <b-form-input type="text" placeholder="soat" v-model="creatingCar.soat" autofocus></b-form-input>
             <b>year</b>
-            <b-form-input type="text" placeholder="year" v-model="editingCar.year" autofocus></b-form-input>
+            <b-form-input type="text" placeholder="year" v-model="creatingCar.year" autofocus></b-form-input>
           </form>
         </b-modal>
       </div>
@@ -79,12 +79,17 @@ export default {
   computed:{
     getCars(){
       return this.$store.getters.cars;
+    },
+    getActualCar(){
+      console.log(this.$store.getters.ActualCar);
+      return this.$store.getters.ActualCar;
     }
   },
   data(){
     return{
       flashalert: false,
-      editingCar: {brand: null, model: null, soat: null, year: null}
+      editingCar: {plate: null, brand: null, model: null, soat: null, year: null},
+      creatingCar: {plate: null, brand: null, model: null, soat: null, year: null}
     }
   },
   beforeCreate(){
@@ -93,6 +98,18 @@ export default {
 
   },
   methods: {
+    createNewCar(){
+      this.$store.dispatch('sendNewCar', this.creatingCar)
+        .then(() => {
+          this.$store.dispatch('carsInfo');
+        })
+    },
+    deleteCar(placa){
+      this.$store.dispatch('deleteCar', placa)
+        .then(() => {
+          this.$store.dispatch('carsInfo');
+        })
+    },
     setEditingCar(brand, model, soat, year){
       this.editingCar = {brand: brand, model: model, soat: soat, year: year};
     }

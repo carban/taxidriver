@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
   state:{
     token: localStorage.getItem('access_token') || null,
     carChosen: false,
+    ActualCar: {ActualPlate: null},
     mapdata: [],
     profile: {first_name: null, last_name: null, phone: null},
     driverData: {first_name: null, last_name: null, phone: null},
@@ -23,8 +24,6 @@ export const store = new Vuex.Store({
     origin: [3.42882159671311, -76.54704415637336],
     destiny: [3.4329340857995096, -76.48538692422893],
     destinyAndTime: [],
-    firstTimeForAInterval: true,
-    youllbeawoman: true
   },
   //Sirve para obtener datos del state
   getters: {
@@ -36,6 +35,9 @@ export const store = new Vuex.Store({
     },
     carChosen: state => {
       return state.carChosen;
+    },
+    ActualCar: state => {
+      return state.ActualCar.ActualPlate;
     },
     profile: state => {
       return state.profile;
@@ -55,12 +57,6 @@ export const store = new Vuex.Store({
     destinyAndTime: state => {
       return state.destinyAndTime;
     },
-    firstTimeForAInterval: state => {
-      return state.firstTimeForAInterval;
-    },
-    youllbeawoman: state => {
-      return state.youllbeawoman;
-    },
     driverData: state => {
       return state.driverData;
     }
@@ -74,8 +70,12 @@ export const store = new Vuex.Store({
     destroyToken: state => {
       state.token = null;
     },
-    setCarChosen: state => {
-      state.carChosen = !state.carChosen;
+    setCarChosenTrue: state => {
+      state.carChosen = true;
+    },
+    setActualCar: (state, actual) => {
+      console.log(actual);
+      state.ActualCar = {ActualPlate: actual};
     },
     setProfile: (state, pro) => {
       state.profile = pro;
@@ -101,12 +101,6 @@ export const store = new Vuex.Store({
     destinyAndTime: (state, arr) => {
       state.destinyAndTime = arr;
       state.firstTimeForAInterval = !state.firstTimeForAInterval;
-    },
-    firstTimeForAInterval: (state) => {
-      state.firstTimeForAInterval = !state.firstTimeForAInterval;
-    },
-    youllbeawoman: (state) => {
-      state.youllbeawoman = !state.youllbeawoman;
     },
     driverData: (state, data) => {
       state.driverData = data;
@@ -214,7 +208,7 @@ export const store = new Vuex.Store({
         //console.log(context.getters.token);
         const decoded = jwtDecode(context.getters.token);
         // const phoneNumber = context.getters.profile.phone;
-        const obj = {f_item: item, phone: decoded.phone};
+        const obj = {carInfo: item, phone: decoded.phone};
         axios.post('http://localhost:8000/api/driver/new-car', obj)
           .then(res => {
             console.log(res.data);
@@ -225,12 +219,12 @@ export const store = new Vuex.Store({
           })
       });
     },
-    deleteCar: (context, favID) => {
+    deleteCar: (context, placa) => {
       return new Promise((resolve, reject) => {
         //console.log(context.getters.token);
         const decoded = jwtDecode(context.getters.token);
-        const obj = {fav: favID, phone: decoded};
-        axios.post('http://localhost:8000/api/profile/delete-favorite', obj)
+        const obj = {plate: placa, phone: decoded.phone};
+        axios.post('http://localhost:8000/api/profile/delete-car', obj)
           .then(res => {
             console.log(res.data);
             resolve(res);
