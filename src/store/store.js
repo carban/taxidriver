@@ -11,7 +11,7 @@ export const store = new Vuex.Store({
     token: localStorage.getItem('access_token') || null,
     carChosen: false,
     ActualCar: {ActualPlate: null},
-    mapdata: [],
+    myservice: null,
     profile: {first_name: null, last_name: null, phone: null},
     driverData: {first_name: null, last_name: null, phone: null},
     // cars: {title: null, coor: null},
@@ -24,6 +24,7 @@ export const store = new Vuex.Store({
     origin: [3.42882159671311, -76.54704415637336],
     destiny: [3.4329340857995096, -76.48538692422893],
     destinyAndTime: [],
+    youllbeawoman: true
   },
   //Sirve para obtener datos del state
   getters: {
@@ -42,8 +43,8 @@ export const store = new Vuex.Store({
     profile: state => {
       return state.profile;
     },
-    mapdata: state => {
-      return state.mapdata;
+    myservice: state => {
+      return state.myservice;
     },
     cars: state => {
       return state.cars;
@@ -59,7 +60,10 @@ export const store = new Vuex.Store({
     },
     driverData: state => {
       return state.driverData;
-    }
+    },
+    youllbeawoman: state => {
+      return state.youllbeawoman;
+    },
   },
   //Modifican los datos del estado
   //Las mutiaciones son sincronas
@@ -95,8 +99,8 @@ export const store = new Vuex.Store({
     removeMapdata: state => {
       state.mapdata = [];
     },
-    mapinfo: (state, data) => {
-      state.mapdata = data;
+    myservice: (state, data) => {
+      state.myservice = data;
     },
     destinyAndTime: (state, arr) => {
       state.destinyAndTime = arr;
@@ -104,6 +108,9 @@ export const store = new Vuex.Store({
     },
     driverData: (state, data) => {
       state.driverData = data;
+    },
+    youllbeawoman: (state) => {
+      state.youllbeawoman = !state.youllbeawoman;
     }
   },
   //Se utiliza para hacer llamadas al servidor
@@ -249,32 +256,26 @@ export const store = new Vuex.Store({
           })
       });
     },
-    cercano: context => {
-      axios.post('http://localhost:8000/api/service', {coordenada: context.getters.origin})
+    newPosition: (context) => {
+      const decoded = jwtDecode(context.getters.token);
+      var taxiactual = context.getters.ActualCar;
+      var obj = {phone: decoded.phone, coordenada: context.getters.origin, taxi: taxiactual};
+      //console.log(obj);
+      axios.post('http://localhost:8000/api/driver/new-position', obj)
         .then(res => {
-          // console.log(res.data.rows[0]);
-          context.commit('driverData', res.data.rows[0]);
+          console.log(res.data.msg);
         })
         .catch(err => {
           console.log(err);
         })
     },
-    infoMap: context => {
-      axios.get('http://localhost:8000/api/map/info')
+    infoService: context => {
+      const decoded = jwtDecode(context.getters.token);
+      var obj = {phone: decoded.phone};
+      console.log("preguntando....");
+      axios.post('http://localhost:8000/api/driver/my-services', obj)
         .then(res => {
-          console.log(res.data.mapdata);
-          var data = res.data.mapdata;
-          var array = []
-          for(var i in data){
-            var lat = data[i].geom.coordinates[0];
-            var lng = data[i].geom.coordinates[1];
-            var fname = data[i].first_name;
-            var lname = data[i].last_name;
-            var phone = data[i].phone;
-            array.push({coor: [lat, lng], fname, lname, phone});
-          }
-          //console.log(array);
-          context.commit('mapinfo', array);
+          context.commit('myservice', res.data.rows[0])
         })
         .catch(err => {
           console.log(err);

@@ -21,8 +21,7 @@
         <!-- MENU COOR -->
         <l-marker :icon="iconMenu" v-if="!summary_bool" :lat-lng="menuCoor">
           <l-popup>
-            <b-button variant="info" v-on:click="newOrigin">Ok Origin</b-button>
-            <b-button variant="info" v-on:click="newDestiny">Ok Destiny</b-button>
+            <b-button variant="info" v-on:click="newOrigin">Ok Position</b-button>
           </l-popup>
         </l-marker>
         <!--  -->
@@ -127,12 +126,7 @@ export default {
     },
     newOrigin(event){
       this.$store.commit('setOrigin', this.menuCoor);
-    },
-    newDestiny(event){
-      this.$store.commit('setDestiny', this.menuCoor);
-    },
-    summ(){
-
+      this.$store.dispatch('newPosition');
     }
   },
   beforeCreate(){

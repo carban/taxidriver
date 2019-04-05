@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{consultData.length}}</h1>
+    <h1>{{consultData}}</h1>
     <button v-on:click="showPopUp" >show</button>
     <b-modal v-model="modalShow">
       Hello From Modal!
@@ -12,9 +12,11 @@
 export default {
   computed: {
     consultData(){
-      var data = this.$store.getters.mapdata;
-      if (data.length > 0) {
+      var data = this.$store.getters.myservice;
+      if (data != null) {
         this.showPopUp();
+      }else{
+        data = 'No services';
       }
       return data;
     },
@@ -38,7 +40,7 @@ export default {
       this.$store.commit('youllbeawoman');
       const localStore = this.$store;
       setInterval(function() {
-        localStore.dispatch('infoMap');
+        localStore.dispatch('infoService');
       }, 15 * 1000);
     }
   },
