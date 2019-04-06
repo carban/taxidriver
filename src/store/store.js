@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state:{
-    token: localStorage.getItem('access_token') || null,
+    token: localStorage.getItem('access_driver_token') || null,
     carChosen: false,
     ActualCar: {ActualPlate: null},
     myservice: null,
@@ -23,6 +23,7 @@ export const store = new Vuex.Store({
     //cars: null,
     origin: [3.42882159671311, -76.54704415637336],
     destiny: [3.4329340857995096, -76.48538692422893],
+    driver_position: [3.4129340857995096, -76.45538692422893],
     destinyAndTime: [],
     youllbeawoman: true
   },
@@ -54,6 +55,9 @@ export const store = new Vuex.Store({
     },
     destiny: state => {
       return state.destiny;
+    },
+    driver_position: state => {
+      return state.driver_position;
     },
     destinyAndTime: state => {
       return state.destinyAndTime;
@@ -96,6 +100,9 @@ export const store = new Vuex.Store({
     setDestiny: (state, coor) => {
       state.destiny = coor;
     },
+    setDriver_position: (state, coor) => {
+      state.driver_position = coor;
+    },
     removeMapdata: state => {
       state.mapdata = [];
     },
@@ -137,7 +144,7 @@ export const store = new Vuex.Store({
           .then(res => {
             console.log(res.data);
             const token = res.data;
-            localStorage.setItem('access_token', token);
+            localStorage.setItem('access_driver_token', token);
             context.commit('tokenMutation', token);
             const {phone} = jwtDecode(context.getters.token)
             resolve(res);
@@ -150,7 +157,7 @@ export const store = new Vuex.Store({
     logout: context =>{
       if(context.getters.loggedIn){
         context.commit('removeMapdata');
-        localStorage.removeItem('access_token');
+        localStorage.removeItem('access_driver_token');
         context.commit('removeProfile');
         context.commit('destroyToken');
       }
@@ -259,7 +266,7 @@ export const store = new Vuex.Store({
     newPosition: (context) => {
       const decoded = jwtDecode(context.getters.token);
       var taxiactual = context.getters.ActualCar;
-      var obj = {phone: decoded.phone, coordenada: context.getters.origin, taxi: taxiactual};
+      var obj = {phone: decoded.phone, coordenada: context.getters.driver_position, taxi: taxiactual};
       //console.log(obj);
       axios.post('http://localhost:8000/api/driver/new-position', obj)
         .then(res => {
@@ -275,7 +282,13 @@ export const store = new Vuex.Store({
       console.log("preguntando....");
       axios.post('http://localhost:8000/api/driver/my-services', obj)
         .then(res => {
-          context.commit('myservice', res.data.rows[0])
+          if (res.data.msg == 'No services') {
+            console.log(res.data.msg);
+          }else{
+            context.commit('myservice', res.data.rows[0]);
+            context.commit('setOrigin', context.getters.myservice.origen_geom.coordinates);
+            context.commit('setDestiny', context.getters.myservice.destino_geom.coordinates);
+          }
         })
         .catch(err => {
           console.log(err);

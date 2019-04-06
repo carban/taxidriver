@@ -1,19 +1,26 @@
 <template lang="html">
   <div class="row-lg-12">
       <div class="calltaxibg">
-        <h4>Disponible</h4>
-        <div>
-          <h1>{{consultData}}</h1>
-          <button v-on:click="showPopUp" >show</button>
-          <b-modal v-model="modalShow">
-            {{consultData}}
-          </b-modal>
+        <div class="card-body">
+            <div class="row">
+              <div class="tag">
+                <b>Status: </b>
+              </div>
+                <button v-on:click="toggle_action" class="btn mytoggle" v-bind:class="status_color" >{{status}}</button>
+                <div class="col">
+                  <h4>{{consultData}}</h4>
+                  <b-modal v-model="modalShow">
+                    {{consultData}}
+                  </b-modal>
+                </div>
+          </div>
         </div>
       </div>
   </div>
 </template>
 
 <script>
+
 export default {
   computed: {
     consultData(){
@@ -32,7 +39,9 @@ export default {
   },
   data(){
     return {
-      modalShow: false
+      modalShow: false,
+      status: 'Available',
+      status_color: 'btn-success animated rubberBand'
     }
   },
   methods: {
@@ -46,6 +55,15 @@ export default {
     },
     showPopUp(){
       this.modalShow = true;
+    },
+    toggle_action(){
+      if (this.status=='Available') {
+        this.status = 'Busy';
+        this.status_color = 'btn btn-danger';
+      }else{
+        this.status = 'Available';
+        this.status_color = 'btn btn-success';
+      }
     }
 
   },
@@ -68,7 +86,7 @@ export default {
     /* background-color: red; */
   }
   .tag{
-    margin-right: 0px;
+    margin-right: 30px;
     width:40px;
   }
 
@@ -95,4 +113,5 @@ export default {
   #hide2{
     display: none;
   }
+
 </style>

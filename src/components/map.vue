@@ -12,12 +12,18 @@
         <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
         <!-- <l-marker :lat-lng="marker" :icon="icon"></l-marker> -->
         <!-- <l-marker v-for="(mark, err) in myMarkers" :key="err" :lat-lng="mark.coor"></l-marker> -->
-        <!--ORIGIN COOR  -->
-        <!-- <l-marker :icon="iconOrigin" :lat-lng="originCoor"> -->
-        <!-- </l-marker> -->
+        <!-- ORIGIN COOR  -->
+        <l-marker v-if="myservice!=null" :icon="iconOrigin" :lat-lng="originCoor">
+        </l-marker>
         <!-- DESTINY COOR -->
-        <!-- <l-marker :icon="iconDestiny" :lat-lng="destinyCoor"> -->
-        <!-- </l-marker> -->
+        <l-marker v-if="myservice!=null" :icon="iconDestiny" :lat-lng="destinyCoor">
+          <l-popup>
+            <b-button variant="danger">Finish</b-button>
+          </l-popup>
+        </l-marker>
+        <!-- DRIVER COOR -->
+        <l-marker :icon="icon" :lat-lng="menuCoor">
+        </l-marker>
         <!-- MENU COOR -->
         <l-marker :icon="iconMenu" v-if="!summary_bool" :lat-lng="menuCoor">
           <l-popup>
@@ -72,11 +78,17 @@ export default {
     destinyCoor(){
       return this.$store.getters.destiny;
     },
+    driverCoor(){
+      return this.$store.getters.driver_position;
+    },
     mypolyline() {
       return {
         latlngs: [this.originCoor, this.destinyCoor],
         color: 'blue'
       }
+    },
+    myservice(){
+      return this.$store.getters.myservice;
     }
   },
   data () {
@@ -103,6 +115,11 @@ export default {
         iconSize: [60, 60],
         iconAnchor: [30, 30]
       }),
+      iconDriver: L.icon({
+        iconUrl: 'static/blueshadow.png',
+        iconSize: [60, 60],
+        iconAnchor: [30, 30]
+      }),
       iconMenu: L.icon({
         iconUrl: 'static/add-place.png',
         iconSize: [40, 40],
@@ -125,7 +142,7 @@ export default {
       this.menuCoor = [event.latlng.lat, event.latlng.lng];
     },
     newOrigin(event){
-      this.$store.commit('setOrigin', this.menuCoor);
+      this.$store.commit('setDriver_position', this.menuCoor);
       this.$store.dispatch('newPosition');
     }
   },
@@ -136,27 +153,36 @@ export default {
     // alert("Choose car");
   },
   mounted() {
-    // this.$nextTick(() => {
-    //   var mapp = this.$refs.myMap.mapObject // work as expected
-    //
-    //  this.machineControl = L.Routing.control({
-    //    // waypoints: [
-    //    //   [3.42882159671311, -76.54704415637336],
-    //    //   [3.4329340857995096, -76.48538692422893]
-    //    // ],
-    //    // router: new L.Routing.OSRMv1({
-    //    //     serviceUrl: "http://download.geofabrik.de/south-america/colombia-latest.osm.pbf"
-    //    // }),
-    //    lineOptions: {
-    //      styles: [{color: 'blue', opacity: .7, weight: 4}],
-    //      missingRouteStyles: [{color: 'lime', opacity: 0.25, weight: 7}]
-    //    }
-    //  }).addTo(mapp)
-    // });
+    this.$nextTick(() => {
+      var mapp = this.$refs.myMap.mapObject // work as expected
+
+     this.machineControl = L.Routing.control({
+       // waypoints: [
+       //   [3.42882159671311, -76.54704415637336],
+       //   [3.4329340857995096, -76.48538692422893],
+       //   [3.4129340857995096, -76.45538692422893]
+       // ],
+       // router: new L.Routing.OSRMv1({
+       //     serviceUrl: "http://download.geofabrik.de/south-america/colombia-latest.osm.pbf"
+       // }),
+       lineOptions: {
+         styles: [{color: 'blue', opacity: .7, weight: 4}],
+         missingRouteStyles: [{color: 'lime', opacity: 0.25, weight: 7}]
+       }
+     }).addTo(mapp)
+    });
+    // if (myservice!=null) {
+    //   this.machineControl.spliceWaypoints(0, 1, this.driverCoor);
+    //   this.machineControl.spliceWaypoints(1, 2, this.originCoor);
+    //   this.machineControl.spliceWaypoints(2, 0, this.destinyCoor);
+    // }
   },
   updated(){
-      // this.machineControl.spliceWaypoints(0, 1, this.originCoor);
-      // this.machineControl.spliceWaypoints(1, 1, this.destinyCoor);
+    if (this.myservice!=null) {
+      this.machineControl.spliceWaypoints(0, 1, this.driverCoor);
+      this.machineControl.spliceWaypoints(1, 2, this.originCoor);
+      this.machineControl.spliceWaypoints(2, 0, this.destinyCoor);
+    }
   }
 }
 </script>
