@@ -276,6 +276,17 @@ export const store = new Vuex.Store({
           console.log(err);
         })
     },
+    service_accepted: (context) => {
+      const decoded = jwtDecode(context.getters.token);
+      //console.log(obj);
+      axios.post('http://localhost:8000/api/driver/ok-service', decoded)
+        .then(res => {
+          console.log(res.data.msg);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
     infoService: context => {
       const decoded = jwtDecode(context.getters.token);
       var obj = {phone: decoded.phone};
@@ -284,7 +295,7 @@ export const store = new Vuex.Store({
         .then(res => {
           if (res.data.msg == 'No services') {
             console.log(res.data.msg);
-          }else{
+          }else{//AQUI SE PONDRIA UNA VALIDACION PARA SABER SI YA SE PAGO O NO
             context.commit('myservice', res.data.rows[0]);
             context.commit('setOrigin', context.getters.myservice.origen_geom.coordinates);
             context.commit('setDestiny', context.getters.myservice.destino_geom.coordinates);

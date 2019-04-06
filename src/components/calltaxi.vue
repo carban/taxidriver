@@ -2,17 +2,21 @@
   <div class="row-lg-12">
       <div class="calltaxibg">
         <div class="card-body">
-            <div class="row">
+          <div class="row">
+            <div class="tag">
+              <b>Status: </b>
+            </div>
+              <button v-on:click="toggle_action" class="btn mytoggle" v-bind:class="status_color" >{{status}}</button>
+              <b-modal v-model="modalShow" @ok="aceptarServicio">
+               {{consultData}}
+              </b-modal>
               <div class="tag">
-                <b>Status: </b>
+                <b>Travel: </b>
               </div>
-                <button v-on:click="toggle_action" class="btn mytoggle" v-bind:class="status_color" >{{status}}</button>
-                <div class="col">
-                  <h4>{{consultData}}</h4>
-                  <b-modal v-model="modalShow">
-                    {{consultData}}
-                  </b-modal>
-                </div>
+                <b-btn v-b-modal.modalCharge class="btn btn-warning" >Finish Travel</b-btn>
+                <b-modal id="modalCharge">
+                 {{consultData}}
+                </b-modal>
           </div>
         </div>
       </div>
@@ -64,6 +68,9 @@ export default {
         this.status = 'Available';
         this.status_color = 'btn btn-success';
       }
+    },
+    aceptarServicio(){
+      this.$store.dispatch('service_accepted');
     }
 
   },
@@ -86,7 +93,8 @@ export default {
     /* background-color: red; */
   }
   .tag{
-    margin-right: 30px;
+    margin-right: 35px;
+    margin-left: 35px;
     width:40px;
   }
 
