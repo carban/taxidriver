@@ -14,8 +14,8 @@
                 <b>Travel: </b>
               </div>
                 <b-btn v-b-modal.modalCharge class="btn btn-warning" >Finish Travel</b-btn>
-                <b-modal id="modalCharge">
-                 {{consultData}}
+                <b-modal id="modalCharge" @ok="finish_travel">
+                 "VIAJE FINALIZADO"
                 </b-modal>
           </div>
         </div>
@@ -39,12 +39,15 @@ export default {
     },
     youllbeawoman(){
       return this.$store.getters.youllbeawoman;
+    },
+    status(){
+      return this.$store.getters.status_working;
     }
   },
   data(){
     return {
       modalShow: false,
-      status: 'Available',
+      working: false,
       status_color: 'btn-success animated rubberBand'
     }
   },
@@ -61,16 +64,26 @@ export default {
       this.modalShow = true;
     },
     toggle_action(){
-      if (this.status=='Available') {
-        this.status = 'Busy';
-        this.status_color = 'btn btn-danger';
-      }else{
-        this.status = 'Available';
-        this.status_color = 'btn btn-success';
+      if (!this.working) {
+        if (this.status=='Available') {
+          this.$store.commit('set_status_working', 'Busy');
+          this.status_color = 'btn btn-danger';
+        }else{
+          this.$store.commit('set_status_working', 'Available');
+          this.status_color = 'btn btn-success';
+        }
       }
     },
     aceptarServicio(){
+      this.toggle_action();
+      this.working = true;
       this.$store.dispatch('service_accepted');
+    },
+    finish_travel(){
+      this.working = false;
+      this.toggle_action();
+      this.$store.commit('myservice', null);
+      this.$router.push({name: 'profile'})
     }
 
   },

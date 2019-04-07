@@ -25,7 +25,8 @@ export const store = new Vuex.Store({
     destiny: [3.4329340857995096, -76.48538692422893],
     driver_position: [3.4129340857995096, -76.45538692422893],
     destinyAndTime: [],
-    youllbeawoman: true
+    youllbeawoman: true,
+    status_working: 'Available'
   },
   //Sirve para obtener datos del state
   getters: {
@@ -68,6 +69,9 @@ export const store = new Vuex.Store({
     youllbeawoman: state => {
       return state.youllbeawoman;
     },
+    status_working: state => {
+      return state.status_working;
+    }
   },
   //Modifican los datos del estado
   //Las mutiaciones son sincronas
@@ -118,6 +122,9 @@ export const store = new Vuex.Store({
     },
     youllbeawoman: (state) => {
       state.youllbeawoman = !state.youllbeawoman;
+    },
+    set_status_working: (state, val) => {
+      state.status_working = val;
     }
   },
   //Se utiliza para hacer llamadas al servidor
@@ -268,13 +275,16 @@ export const store = new Vuex.Store({
       var taxiactual = context.getters.ActualCar;
       var obj = {phone: decoded.phone, coordenada: context.getters.driver_position, taxi: taxiactual};
       //console.log(obj);
-      axios.post('http://localhost:8000/api/driver/new-position', obj)
-        .then(res => {
-          console.log(res.data.msg);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+      if (context.getters.status_working == 'Available') {
+        axios.post('http://localhost:8000/api/driver/new-position', obj)
+          .then(res => {
+            console.log(res.data.msg);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }
+
     },
     service_accepted: (context) => {
       const decoded = jwtDecode(context.getters.token);
