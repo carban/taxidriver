@@ -10,12 +10,12 @@
               <b-modal v-model="modalShow" @ok="aceptarServicio">
                {{consultData}}
               </b-modal>
-              <div class="tag">
+              <div v-if="working" class="tag">
                 <b>Travel: </b>
               </div>
-                <b-btn v-b-modal.modalCharge class="btn btn-warning" >Finish Travel</b-btn>
+                <b-btn v-if="working" v-b-modal.modalCharge class="btn btn-warning" >Finish Travel</b-btn>
                 <b-modal id="modalCharge" @ok="finish_travel">
-                 "VIAJE FINALIZADO"
+                 TRAVEL FINISHED
                 </b-modal>
           </div>
         </div>
@@ -31,7 +31,7 @@ export default {
       var data = this.$store.getters.myservice;
       if (data != null) {
         this.showPopUp();
-        data = "SERVICIO NUEVO"
+        data = "NEW SERVICE"
       }else{
         data = 'No services';
       }
@@ -67,6 +67,7 @@ export default {
       if (!this.working) {
         if (this.status=='Available') {
           this.$store.commit('set_status_working', 'Busy');
+          this.$store.dispatch('busyPosition')
           this.status_color = 'btn btn-danger';
         }else{
           this.$store.commit('set_status_working', 'Available');
@@ -94,7 +95,7 @@ export default {
       const localStore = this.$store;
       setInterval(function() {
         localStore.dispatch('infoService');
-      }, 15 * 1000);
+      }, 5 * 1000);
     }
   }
 }
@@ -102,7 +103,8 @@ export default {
 
 <style lang="css">
   .calltaxibg{
-    background: #3FB27F;
+    //background: #8258FA;
+    background: linear-gradient(to bottom, #8258FA 80%, #a8810000 100%);
     /* background-color: red; */
   }
   .tag{

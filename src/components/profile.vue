@@ -68,8 +68,8 @@
               </b-modal>
 
               <b-modal id="chooseTaxi" title="Select the car to work" @ok="">
-                <div v-on:click="letsgo(item.placa)" class="alert alert-info" v-for="(item, index) in getCars" :key="index">
-                  {{item.placa}}
+                <div v-on:click="letsgo(item.placa)" class="alert alert-warning" v-for="(item, index) in getCars" :key="index">
+                  <b>{{item.placa}}</b>
                 </div>
               </b-modal>
                 </div>
@@ -79,16 +79,16 @@
               <b>Travels Information</b>
               </br>
               <div class="profileItems">
-                <h4>Average Stars: 5</h4>
+                <h4>Average Stars: {{travelsinfo.promedio}}</h4>
               </div>
               <div class="profileItems">
-                <h4>Travels: 0</h4>
+                <h4>Travels: {{travelsinfo.viajes}}</h4>
               </div>
               <div class="profileItems">
-                <h4>KM of travel: 0</h4>
+                <h4>KM of travel: {{travelsinfo.kms}}</h4>
               </div>
               <div class="profileItems">
-                <h4>Time of travel: 0</h4>
+                <h4>Money: ${{travelsinfo.dinero*0.4}}</h4>
               </div>
               <img class="aimage" src="@/assets/taxi2.png">
             </div>
@@ -110,6 +110,9 @@ export default {
     },
     getCars(){
       return this.$store.getters.cars;
+    },
+    travelsinfo(){
+      return this.$store.getters.travelsinfo;
     }
   },
   data(){

@@ -65,7 +65,7 @@ export default {
 
 <style lang="css">
 .navbar-blue {
-  background-color: #3FB27F;
+  background-color: #8258FA;
 }
 .bb {
   color: black;

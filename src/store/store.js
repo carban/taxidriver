@@ -13,6 +13,7 @@ export const store = new Vuex.Store({
     ActualCar: {ActualPlate: null},
     myservice: null,
     profile: {first_name: null, last_name: null, phone: null},
+    travelsinfo: {kms: 0, viajes: 0, dinero: 0, promedio: 0},
     driverData: {first_name: null, last_name: null, phone: null},
     // cars: {title: null, coor: null},
     cars: [
@@ -44,6 +45,9 @@ export const store = new Vuex.Store({
     },
     profile: state => {
       return state.profile;
+    },
+    travelsinfo: state => {
+      return state.travelsinfo;
     },
     myservice: state => {
       return state.myservice;
@@ -91,6 +95,9 @@ export const store = new Vuex.Store({
     },
     setProfile: (state, pro) => {
       state.profile = pro;
+    },
+    setTravelsinfo: (state, val) => {
+      state.travelsinfo = val;
     },
     setcars: (state, fav) => {
       state.cars = fav;
@@ -177,7 +184,8 @@ export const store = new Vuex.Store({
         axios.post('http://localhost:8000/api/driver/profile', decoded)
           .then(res => {
             console.log(res.data);
-            context.commit('setProfile', res.data);
+            context.commit('setProfile', res.data.profileInfo);
+            context.commit('setTravelsinfo', res.data.travelsInfo);
             resolve(res);
           })
           .catch(err => {
@@ -284,7 +292,16 @@ export const store = new Vuex.Store({
             console.log(err);
           })
       }
-
+    },
+    busyPosition: (context) => {
+      const decoded = jwtDecode(context.getters.token);
+      axios.post('http://localhost:8000/api/driver/busy-position', decoded)
+        .then(res => {
+          console.log(res.data.msg);
+        })
+        .catch(err => {
+          console.log(err);
+        })
     },
     service_accepted: (context) => {
       const decoded = jwtDecode(context.getters.token);
