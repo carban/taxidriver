@@ -206,6 +206,18 @@ export const store = new Vuex.Store({
           })
       });
     },
+    changePassword: (context, obj) => {
+      return new Promise((resolve, reject) => {
+        const decoded = jwtDecode(context.getters.token);
+        axios.post('http://localhost:8000/api/driver/change-password', {phone: decoded.phone, pass:obj.new_pass})
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          })
+      });
+    },
     carsInfo: context => {
       return new Promise((resolve, reject) => {
         console.log('cars consulted');
