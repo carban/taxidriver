@@ -13,13 +13,13 @@
             <div class="imgcontainer">
               <img v-bind:src="user.imagenconductor" alt="Avatar" class="img">
               <div class="middle">
-                <b-btn v-b-modal.changePic class="btn btn-warning btn-block">Change Pic</b-btn>
+                <b-btn v-b-modal.changePic class="btn btn-warning btn-block hovercolor">Change Pic</b-btn>
               </div>
             </div>
             <hr>
             </center>
             <div class="row">
-              <button v-b-modal.chooseTaxi class="btn btn-primary btn-block">Start Working!</button>
+              <button v-b-modal.chooseTaxi class="btn btn-primary btn-block"><img class="wheel" src="@/assets/wheel.gif">Start Working!</button>
             <div class="col-sm-6">
             <div class="form-group">
               <div>
@@ -61,14 +61,14 @@
                 </div>
               </b-modal>
 
-              <b-modal id="changePic" title="Change your Profile pic" @ok="">
+              <b-modal id="changePic" title="Change your Profile pic" @ok="changePic">
                 <div class="form-group">
-                  <input class="form-control" type="text" name="" value="" placeholder="New Url">
+                  <input v-model="new_pic" class="form-control" type="text" name="" value="" placeholder="New Url">
                 </div>
               </b-modal>
 
               <b-modal id="chooseTaxi" title="Select the car to work" @ok="">
-                <div v-on:click="letsgo(item.placa)" class="alert alert-warning" v-for="(item, index) in getCars" :key="index">
+                <div v-on:click="letsgo(item.placa)" class="alert alert-warning pointer" v-for="(item, index) in getCars" :key="index">
                   <b>{{item.placa}}</b>
                 </div>
               </b-modal>
@@ -119,7 +119,8 @@ export default {
     return{
       flashalert: false,
       newpassword: '',
-      confirmpassword: ''
+      confirmpassword: '',
+      new_pic: ''
     }
   },
   beforeCreate(){
@@ -158,6 +159,14 @@ export default {
           })
       }
 
+    },
+    changePic(){
+      this.$store.dispatch('changePicture', {new_pic:this.new_pic})
+        .then(res => {
+          this.new_pic = '';
+          this.flashalert = true;
+          this.flashMe({ message: 'pic Updated', variant: 'success' });
+        })
     },
     letsgo(placa){
       this.$store.commit('setCarChosenTrue');
@@ -247,5 +256,19 @@ export default {
   .optionImagen{
     width: 50px;
     height: 50px;
+  }
+
+  .wheel{
+   width: 50px;
+   height: 50px;
+   margin-right: 10px;
+  }
+
+  .hovercolor:hover{
+    background-color: black;
+  }
+
+  .pointer{
+    cursor: pointer;
   }
 </style>

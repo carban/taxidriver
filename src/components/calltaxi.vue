@@ -8,14 +8,24 @@
             </div>
               <button v-on:click="toggle_action" class="btn mytoggle" v-bind:class="status_color" >{{status}}</button>
               <b-modal v-model="modalShow" @ok="aceptarServicio">
-               {{consultData}}
+               <b><h1><i>{{consultData}}</i></h1></b>
+               <img src="@/assets/taxi2.png"></img>
+               <div class="col">
+                 <div class="col">
+                   <h5><b>Name: </b>{{cliinfo.nombrecliente}} {{cliinfo.apellidocliente}}</h5>
+                   <br>
+                   <h5><b>phone: </b>{{cliinfo.telefonocliente}}</h5>
+                 </div>
+               </div>
               </b-modal>
               <div v-if="working" class="tag">
                 <b>Travel: </b>
               </div>
                 <b-btn v-if="working" v-b-modal.modalCharge class="btn btn-warning" >Finish Travel</b-btn>
                 <b-modal id="modalCharge" @ok="finish_travel">
-                 TRAVEL FINISHED
+                  <div class="">
+                    <b><h1>FINISH TRAVEL</h1></b>
+                  </div>
                 </b-modal>
           </div>
         </div>
@@ -42,6 +52,9 @@ export default {
     },
     status(){
       return this.$store.getters.status_working;
+    },
+    cliinfo(){
+      return this.$store.getters.cliinfo;
     }
   },
   data(){

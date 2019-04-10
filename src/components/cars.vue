@@ -16,7 +16,7 @@
                 <th scope="col">Model</th>
                 <th scope="col">Soat</th>
                 <th scope="col">Year</th>
-                <th scope="col">Edit</th>
+                <!-- <th scope="col">Edit</th> -->
                 <th scope="col">Delete</th>
               </thead>
               <tbody>
@@ -26,7 +26,7 @@
                   <td>{{item.modelo}}</td>
                   <td>{{item.soat}}</td>
                   <td>{{item.anho}}</td>
-                  <td><b-button v-on:click="setEditingCar(item.marca, item.modelo, item.soat, item.anho)" v-b-modal.myEditModal variant="info"><img src="@/assets/edit3.png"></b-button></td>
+                  <!-- <td><b-button v-on:click="setEditingCar(item.marca, item.modelo, item.soat, item.anho)" v-b-modal.myEditModal variant="info"><img src="@/assets/edit3.png"></b-button></td> -->
                   <td><b-button v-if="item.placa!=getActualCar" v-on:click="deleteCar(item.placa)" variant="danger"><span aria-hidden="true">&times;</span></b-button></td>
                 </tr>
               </tbody>
@@ -54,16 +54,11 @@
 
         <b-modal id="myCreateCarModal" ref="myCreateModal" title="Edit Car" @ok="createNewCar()">
           <form @submit.stop.prevent="">
-            <b>Plate</b>
-            <b-form-input type="text" placeholder="Plate" v-model="creatingCar.plate" autofocus></b-form-input>
-            <b>brand</b>
-            <b-form-input type="text" placeholder="brand" v-model="creatingCar.brand" autofocus></b-form-input>
-            <b>model</b>
-            <b-form-input type="text" placeholder="Model" v-model="creatingCar.model" autofocus></b-form-input>
-            <b>soat</b>
-            <b-form-input type="text" placeholder="soat" v-model="creatingCar.soat" autofocus></b-form-input>
-            <b>year</b>
-            <b-form-input type="text" placeholder="year" v-model="creatingCar.year" autofocus></b-form-input>
+            <b-form-input class="newcar" type="text" placeholder="Plate" v-model="creatingCar.plate" autofocus></b-form-input>
+            <b-form-input class="newcar" type="text" placeholder="brand" v-model="creatingCar.brand" autofocus></b-form-input>
+            <b-form-input class="newcar" type="text" placeholder="Model" v-model="creatingCar.model" autofocus></b-form-input>
+            <b-form-input class="newcar" type="text" placeholder="soat" v-model="creatingCar.soat" autofocus></b-form-input>
+            <b-form-input class="newcar" type="number" placeholder="year" v-model="creatingCar.year" autofocus></b-form-input>
           </form>
         </b-modal>
       </div>
@@ -142,6 +137,10 @@ export default {
   .taxiimage{
     width: 50px;
     height: 50px;
+  }
+
+  .newcar{
+    margin-top: 15px;
   }
 
 </style>

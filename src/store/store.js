@@ -15,6 +15,7 @@ export const store = new Vuex.Store({
     profile: {first_name: null, last_name: null, phone: null},
     travelsinfo: {kms: 0, viajes: 0, dinero: 0, promedio: 0},
     driverData: {first_name: null, last_name: null, phone: null},
+    cliinfo: {nombrecliente: null, apellidocliente: null, telefonocliente: null},
     // cars: {title: null, coor: null},
     cars: [
       {placa: 200, marca: 'Lamborghini', modelo: 'Gallardo', soat: '123', anho: '2018'},
@@ -51,6 +52,9 @@ export const store = new Vuex.Store({
     },
     myservice: state => {
       return state.myservice;
+    },
+    cliinfo: state => {
+      return state.cliinfo;
     },
     cars: state => {
       return state.cars;
@@ -119,6 +123,9 @@ export const store = new Vuex.Store({
     },
     myservice: (state, data) => {
       state.myservice = data;
+    },
+    cliinfo: (state, data) => {
+      state.cliinfo = data;
     },
     destinyAndTime: (state, arr) => {
       state.destinyAndTime = arr;
@@ -210,6 +217,18 @@ export const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         const decoded = jwtDecode(context.getters.token);
         axios.post('http://localhost:8000/api/driver/change-password', {phone: decoded.phone, pass:obj.new_pass})
+          .then(res => {
+            resolve(res);
+          })
+          .catch(err => {
+            reject(err);
+          })
+      });
+    },
+    changePicture: (context, obj) => {
+      return new Promise((resolve, reject) => {
+        const decoded = jwtDecode(context.getters.token);
+        axios.post('http://localhost:8000/api/driver/change-pic', {phone: decoded.phone, pic:obj.new_pic})
           .then(res => {
             resolve(res);
           })
@@ -335,9 +354,11 @@ export const store = new Vuex.Store({
           if (res.data.msg == 'No services') {
             console.log(res.data.msg);
           }else{//AQUI SE PONDRIA UNA VALIDACION PARA SABER SI YA SE PAGO O NO
-            context.commit('myservice', res.data.rows[0]);
+            context.commit('myservice', res.data.all[0]);
             context.commit('setOrigin', context.getters.myservice.origen_geom.coordinates);
             context.commit('setDestiny', context.getters.myservice.destino_geom.coordinates);
+            context.commit('cliinfo', res.data.cli[0])
+            // console.log(res.data.cli[0]);
           }
         })
         .catch(err => {
